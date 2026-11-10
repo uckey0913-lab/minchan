@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14161F">
+<title>Study-갓생</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* 레이아웃: 휴대폰 한 손 조작 기준 단일 컬럼 앱 + 하단 탭바. 포스터와 같은 네이비·불꽃 오렌지 세계관(다크 고정) */
+:root{
+  --bg:#14161F; --surface:#1B1E2A; --surface2:#232738; --line:#2E3242;
+  --fg:#F5F3EE; --muted:#B9BCC8; --faint:#8A8F9C;
+  --accent:#FF6B2C; --accent-ink:#14161F;
+  --gold:#FFC93C; --dia:#6FD3FF; --iron:#C4C8D2;
+  --danger:#FF7A7A; --ok:#5EE08F;
+  --display:'Black Han Sans','Noto Sans KR',sans-serif;
+  --body:'Noto Sans KR',system-ui,-apple-system,sans-serif;
+  color-scheme:dark;
+}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--fg);margin:0}
+body{font-family:var(--body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+*{box-sizing:border-box}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.app{max-width:520px;margin:0 auto;padding-block:18px 120px;display:flex;flex-direction:column;gap:16px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:26px;letter-spacing:.01em}
+.brand b{color:var(--accent);font-weight:400}
+.mode{font-size:11px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.mode.shared{color:var(--ok);border-color:#2f5b42}
+h2{margin:0;font-size:19px;font-weight:900;text-wrap:balance}
+h3{margin:0;font-size:16px;font-weight:900}
+p{margin:0}
+.muted{color:var(--muted)} .small{font-size:13px} .tiny{font-size:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.wrap{flex-wrap:wrap}
+.grow{flex:1 1 auto;min-width:0}
+.btn{appearance:none;border:0;border-radius:14px;min-height:48px;padding:0 18px;font-weight:900;font-size:16px;cursor:pointer;background:var(--surface2);color:var(--fg);border:1px solid var(--line)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ghost{background:transparent}
+.btn.danger{background:transparent;color:var(--danger);border-color:#5a3236}
+.btn.small{min-height:40px;font-size:14px;padding:0 14px;border-radius:12px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.chip{appearance:none;border:1px solid var(--line);background:transparent;border-radius:999px;min-height:40px;padding:0 14px;font-weight:700;font-size:14px;cursor:pointer;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.tier{display:inline-flex;align-items:center;font-size:12px;font-weight:900;border:1.5px solid currentColor;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.bigtier{font-family:var(--display);font-size:40px;line-height:1}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
+.seg button{appearance:none;border:0;background:transparent;min-height:42px;border-radius:10px;font-weight:900;font-size:14px;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:end}
+.pod{background:var(--surface);border:1px solid var(--line);border-radius:16px 16px 10px 10px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-width:0}
+.pod.p1{border-color:var(--gold);padding-block:22px 14px}
+.pod .medal{font-family:var(--display);font-size:28px;line-height:1}
+.pod b{font-size:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pod .pts{font-family:var(--display);font-size:22px;color:var(--accent);font-variant-numeric:tabular-nums}
+.pod.me{box-shadow:0 0 0 2px var(--accent) inset}
+.rank .pts{font-family:var(--display);font-size:20px;color:var(--accent);font-variant-numeric:tabular-nums;text-align:right}
+.plus{color:var(--ok)} .minus{color:var(--danger)}
+.stat{background:var(--surface2);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.stat b{font-size:18px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.bar{height:10px;background:var(--surface2);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width .4s}
+.req{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.req .ok{color:var(--ok)}
+label.f{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:var(--muted)}
+input[type=text],input[type=number],select{width:100%;min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);padding:0 12px;font-size:16px;font-weight:500}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted)}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent)}
+.list{display:flex;flex-direction:column;gap:8px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.rank{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.rank.me{border-color:var(--accent)}
+.rank .no{font-family:var(--display);font-size:20px;color:var(--faint);text-align:center}
+.rank .no.top{color:var(--gold)}
+.timer{font-family:var(--display);font-size:52px;line-height:1;text-align:center;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.people{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.person{background:var(--surface2);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px}
+.state{font-size:12px;font-weight:900}
+.state.ok{color:var(--ok)} .state.wait{color:var(--muted)} .state.bad{color:var(--danger)}
+.stars{display:flex;gap:6px;justify-content:center}
+.star{appearance:none;background:none;border:0;width:48px;height:48px;cursor:pointer;color:var(--line);padding:0}
+.star[aria-pressed="true"]{color:var(--gold)}
+.notice{border-radius:14px;padding:12px 14px;font-size:14px;font-weight:700;background:#3a2420;color:#FFC2A8;border:1px solid #6b3a2a}
+.notice.info{background:var(--surface2);color:var(--muted);border-color:var(--line);font-weight:500}
+table.rules{width:100%;border-collapse:collapse;font-size:14px}
+table.rules td{padding:8px 0;border-bottom:1px solid var(--line)}
+table.rules td:last-child{text-align:right;font-weight:900;color:var(--accent);white-space:nowrap}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--bg);border-top:1px solid var(--line);
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.nav div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.nav button{appearance:none;background:none;border:0;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:700;color:var(--faint);cursor:pointer}
+.nav button[aria-current="page"]{color:var(--accent)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--fg);color:var(--bg);font-weight:900;font-size:14px;border-radius:999px;padding:10px 18px;max-width:calc(100% - 32px);text-align:center}
+.empty{text-align:center;padding:28px 12px;color:var(--muted);display:flex;flex-direction:column;gap:10px;align-items:center}
+.hook{font-family:var(--display);font-size:34px;line-height:1.2;text-wrap:balance}
+.hook em{font-style:normal;color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="app" id="app" aria-live="polite">
+  <div class="top"><div class="brand">Study-<b>갓생</b></div></div>
+  <div class="card"><p class="muted">공부 기록을 불러오는 중입니다…</p></div>
+</div>
+<nav class="nav" id="nav" hidden><div>
+  <button type="button" data-tab="home">
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 L12 4 L21 11 V20 H14 V14 H10 V20 H3 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>홈</button>
+  <button type="button" data-tab="match">
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="9" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="9" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 20 C3 15 13 15 14 20 M10 20 C11 15 21 15 22 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>메이트 찾기</button>
+  <button type="button" data-tab="rank">
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20 V13 H9 V20 M9 20 V7 H15 V20 M15 20 V10 H20 V20 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>랭킹</button>
+  <button type="button" data-tab="me">
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21 C5 15 19 15 20 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>내 정보</button>
+</div></nav>
+<div class="toast" id="toast" hidden></div>
+
+<script type="module">
+/* =====================================================================
+   Study-갓생 (스터디 갓생) 웹앱 — 학생 참여용 공개 버전
+   - 저장소: Firebase Firestore (무료 요금제로 충분)
+   - 로그인: Firebase 익명 로그인 → 기기마다 보이지 않는 고유 번호가 생김
+             (학생 실명·이메일은 전혀 받지 않음, 닉네임만 사용)
+   - 선생님 모드: 주소 끝에 #teacher 를 붙여 열면 시연 도구가 보임
+       예) https://아이디.github.io/study-godsaeng/#teacher
+   - 데이터 구조
+       users/{id}    : 학생 프로필 (닉네임, 순공 분, 별점 합/횟수, 벌점, 벌점 기록)
+       sessions/{id} : 공부 약속 (방장, 메이트, 장소, 시간, 상태, 체크인, 이탈 횟수 …)
+   - 약속 상태 흐름: open(모집 중) → matched(매칭됨) → running(집중 중) → done(종료)
+                     또는 cancelled(취소·노쇼)
+   ===================================================================== */
+
+// ---------- 0. Firebase 연결 설정 ----------
+// ★ Firebase 콘솔 → 프로젝트 설정 → '내 앱'의 SDK 설정 값을 그대로 붙여 넣으세요.
+//   (이 값은 비밀번호가 아니라 '주소'라서 공개돼도 괜찮습니다. 보안은 firestore.rules가 지킵니다.)
+const firebaseConfig = {
+  apiKey: "AIzaSyDTOPsisKuJ3Kt9vWcMqR2psF0E2JjyaA4",
+  authDomain: "study-godsaeng.firebaseapp.com",
+  projectId: "study-godsaeng",
+  storageBucket: "study-godsaeng.firebasestorage.app",
+  messagingSenderId: "433718997465",
+  appId: "1:433718997465:web:2fb2765c9402aa5e24a9c8"
+};
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, query, where, onSnapshot, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const TEACHER = location.hash === '#teacher'; // 선생님(부스 시연) 모드
+
+// ---------- 1. 규칙(벌점·티어) : 기획안 수치를 한곳에 모아 둠 ----------
+const RULE = {
+  lateMin: 10,        // 시작 10분 지나서 도착 체크 → 지각
+  noShowMin: 15,      // 시작 15분 지나도 안 오면 노쇼 신고 가능
+  awayLimit: 3,       // 집중 중 앱 이탈 3회 이상 → 벌점
+  awaySec: 60,        // 1분 넘게 앱을 벗어나야 '이탈'로 셈
+  penLate: 1, penNoShow: 3, penAway: 1,
+  blockAt: 5          // 벌점 5점 이상 → 매칭 제한
+};
+// 갓생 포인트(P): 랭킹 순위를 정하는 점수. 좋은 행동은 +, 벌점은 −
+const P = {
+  perHour: 10,        // 순공 1시간당 +10P
+  goal: 20,           // 약속한 시간을 끝까지 채우면 +20P
+  onTime: 5,          // 늦지 않게 도착 체크하면 +5P
+  star: 2,            // 메이트에게 받은 별 1개당 +2P (★5 = +10P)
+  penalty: 15         // 벌점 1점당 −15P
+};
+// 티어: 위에서부터 검사해서 처음 만족하는 티어가 내 티어
+const TIERS = [
+  { key: '갓생러', color: 'var(--accent)', h: 40, avg: 4.5, pen: 1 },
+  { key: '다이아', color: 'var(--dia)',    h: 20, avg: 4.0, pen: 2 },
+  { key: '골드',   color: 'var(--gold)',   h: 8,  avg: 3.5, pen: 99 },
+  { key: '아이언', color: 'var(--iron)',   h: 0,  avg: 0,   pen: 99 }
+];
+// 시범 운영은 안전을 위해 '교내 장소'만 열어 둠.
+// 학교 밖 장소를 열려면 아래 목록에 '지역 공공도서관', '스터디카페' 등을 추가하면 됨.
+const PLACES = ['교내 도서관', '교내 자습실', '우리 반 교실 (야간자율학습)'];
+
+// ---------- 2. 작은 도구 함수들 ----------
+const $ = (s) => document.querySelector(s);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+// 사용자가 입력한 글자는 반드시 이 함수로 감싸서 화면에 넣는다(보안)
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const hhmm = (iso) => { const d = new Date(iso); return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0'); };
+const clock = (sec) => { sec = Math.max(0, Math.floor(sec)); const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60; return [h, m, s].map((n) => String(n).padStart(2, '0')).join(':'); };
+const ls = { // 브라우저 저장소 (막혀 있어도 앱이 죽지 않게 try/catch)
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+// ---------- 3. 저장소: Firebase Firestore ----------
+// { checkin: { 학생ID: 시각 } } 처럼 겹친 객체를 'checkin.학생ID' 형태로 펼친다.
+// (Firestore는 이렇게 펼쳐서 보내야 다른 학생의 체크인 기록을 지우지 않고 내 것만 추가함)
+function flatten(obj, prefix = '', out = {}) {
+  for (const k in obj) {
+    const v = obj[k]; const key = prefix ? prefix + '.' + k : k;
+    if (v && typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length) flatten(v, key, out);
+    else out[key] = v;
+  }
+  return out;
+}
+const Store = {
+  mode: 'loading', fb: null, authUid: null, err: '',
+  users: new Map(), sessions: new Map(),
+  async init() {
+    if (!firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith('여기에')) { this.mode = 'setup'; return onData(); }
+    try {
+      const app = initializeApp(firebaseConfig);
+      const cred = await signInAnonymously(getAuth(app)); // 기기별 익명 로그인
+      this.authUid = cred.user.uid;
+      const db = getFirestore(app); this.fb = db; this.mode = 'shared';
+      const arrived = new Set(); // 두 목록이 다 도착하면 화면 그리기 시작
+      const ready = (name) => { arrived.add(name); if (arrived.size === 2) onData(); };
+      onSnapshot(collection(db, 'users'), (snap) => {
+        const m = new Map(); snap.forEach((d) => m.set(d.id, d.data())); this.users = m; ready('users');
+      }, (e) => this.fail(e));
+      // 약속은 최근 2일 것만 불러옴 (무료 사용량 아끼기)
+      const since = new Date(Date.now() - 2 * 24 * 3600 * 1000).toISOString();
+      onSnapshot(query(collection(db, 'sessions'), where('createdAt', '>=', since)), (snap) => {
+        const m = new Map(); snap.forEach((d) => m.set(d.id, d.data())); this.sessions = m; ready('sessions');
+      }, (e) => this.fail(e));
+    } catch (e) { this.fail(e); }
+  },
+  fail(e) { console.error(e); this.mode = 'error'; this.err = (e && e.code) || String(e); onData(); },
+  async set(col, id, data) { return setDoc(doc(this.fb, col, id), data); },
+  async update(col, id, patch) { return updateDoc(doc(this.fb, col, id), flatten(patch)); },
+  async remove(col, id) { return deleteDoc(doc(this.fb, col, id)); }
+};
+async function safe(task, okMsg) { // 저장 실패 시 이유를 알려 주는 공통 처리
+  try { await task(); if (okMsg) toast(okMsg); }
+  catch (e) {
+    console.error(e);
+    const code = e && e.code;
+    toast(code === 'permission-denied' ? '권한이 없는 동작이에요.'
+      : code === 'resource-exhausted' ? '오늘 무료 사용량을 다 썼어요. 내일 다시 시도해 주세요.'
+      : '저장하지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.');
+  }
+}
+
+// ---------- 4. 계산: 통계·티어·내 약속 ----------
+function stats(u) {
+  const h = (u.studyMinutes || 0) / 60;
+  const avg = u.ratingCount ? u.ratingSum / u.ratingCount : 0;
+  return { h, avg, pen: u.penalty || 0, n: u.ratingCount || 0 };
+}
+function tierOf(u) {
+  const s = stats(u);
+  return TIERS.find((t) => t.key === '아이언' || (s.h >= t.h && s.avg >= t.avg && s.pen <= t.pen));
+}
+function tierBadge(u) { const t = tierOf(u); return `<span class="tier" style="color:${t.color}">${t.key}</span>`; }
+function me() { return state.me ? Store.users.get(state.me) : null; }
+function nick(id) { const u = Store.users.get(id); return u ? u.nick : '(알 수 없음)'; }
+function isBlocked(u) { return (u.penalty || 0) >= RULE.blockAt; }
+// 내가 참여 중인(또는 아직 평가 안 한) 약속 하나
+function myActive() {
+  const id = state.me; if (!id) return null;
+  const list = [...Store.sessions.entries()].map(([sid, s]) => ({ id: sid, ...s }))
+    .filter((s) => (s.hostId === id || s.mateId === id) &&
+      (['open', 'matched', 'running'].includes(s.status) ||
+       (s.status === 'done' && s.mateId && !(s.rated && s.rated[id]))))
+    .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  return list[0] || null;
+}
+const otherOf = (s) => (s.hostId === state.me ? s.mateId : s.hostId);
+const ms = (min, speed) => (min * 60000) / (speed || 1); // 시연 배속을 반영한 실제 시간(ms)
+
+// ---------- 5. 행동: 순공·포인트·벌점·별점 적립 ----------
+// 한 학생에게 생긴 변화를 '한 번에' 계산해서 저장한다.
+// (나눠서 여러 번 저장하면, 앞의 저장이 반영되기 전 값으로 뒤의 저장이 덮어쓸 수 있음)
+//   ch.minutes : 적립할 순공 분
+//   ch.points  : [[점수, 이유], ...]
+//   ch.penalty : [벌점, 이유]  → 벌점 1점당 포인트도 깎임
+//   ch.star    : 메이트에게 받은 별점(1~5)
+async function applyUser(userId, ch) {
+  const u = Store.users.get(userId); if (!u) return;
+  const now = new Date().toISOString();
+  const patch = {};
+  const gains = [...(ch.points || [])];
+  if (ch.star) {
+    patch.ratingSum = (u.ratingSum || 0) + ch.star;
+    patch.ratingCount = (u.ratingCount || 0) + 1;
+    gains.push([ch.star * P.star, `메이트 별점 ★${ch.star}`]);
+  }
+  if (ch.penalty) {
+    const [pen, reason] = ch.penalty;
+    patch.penalty = (u.penalty || 0) + pen;
+    patch.penaltyLog = [{ at: now, pts: pen, reason }, ...(u.penaltyLog || [])].slice(0, 20);
+    gains.push([-pen * P.penalty, reason]);
+  }
+  if (ch.minutes > 0) {
+    patch.studyMinutes = (u.studyMinutes || 0) + ch.minutes;
+    patch.sessionsDone = (u.sessionsDone || 0) + 1;
+  }
+  if (gains.length) {
+    const total = gains.reduce((sum, [pts]) => sum + pts, u.points || 0);
+    patch.points = Math.max(0, total); // 포인트는 0 아래로 내려가지 않음
+    patch.pointLog = [...gains.map(([pts, reason]) => ({ at: now, pts, reason })).reverse(), ...(u.pointLog || [])].slice(0, 20);
+  }
+  if (Object.keys(patch).length) await Store.update('users', userId, patch);
+}
+// 포인트 순위 목록 (포인트 → 순공 시간 순)
+function pointRanking() {
+  return [...Store.users.entries()].map(([id, u]) => ({ id, u, s: stats(u), p: u.points || 0 }))
+    .sort((a, b) => b.p - a.p || b.s.h - a.s.h);
+}
+const fmtP = (n) => (n || 0).toLocaleString('ko-KR') + 'P';
+
+// ---------- 6. 화면 상태 ----------
+const state = {
+  me: ls.get('sg.me', null), tab: 'home', durFilter: 0, rankMode: 'point',
+  speed: TEACHER ? ls.get('sg.speed', 60) : 1,   // 시연 배속(선생님 모드 전용): 60이면 1초 = 1분
+  form: { nick: '', grade: '3', cls: '', verified: false, place: PLACES[0], detail: '', when: 0, dur: 120, subject: '' },
+  stars: 0, finishing: false, lastStatus: {}, awayStart: 0
+};
+
+// ---------- 7. 화면 그리기 ----------
+function onData() {
+  if (state.me && !Store.users.has(state.me)) { state.me = null; ls.set('sg.me', null); }
+  // 내 모집글이 매칭되면 알림
+  const a = myActive();
+  if (a) { if (state.lastStatus[a.id] === 'open' && a.status === 'matched') toast(nick(a.mateId) + ' 님이 메이트가 되었어요!'); state.lastStatus[a.id] = a.status; }
+  render();
+}
+
+function render() {
+  const app = $('#app');
+  // 다시 그려도 입력 중인 칸의 커서를 지키기
+  const act = document.activeElement; const keep = act && act.id && app.contains(act) ? { id: act.id, s: act.selectionStart, e: act.selectionEnd } : null;
+  const head = `<div class="top"><div class="brand">${logo(30)}Study-<b>갓생</b></div>
+    ${Store.mode === 'shared' ? `<span class="mode shared">${TEACHER ? '선생님 모드' : '실시간'}</span>` : ''}</div>`;
+  let body;
+  if (Store.mode === 'setup') {
+    body = `<div class="card"><h2>Firebase 연결 설정이 필요해요</h2><p class="muted small">index.html 위쪽의 firebaseConfig에 Firebase 콘솔의 설정 값을 붙여 넣고 다시 올려 주세요. (설정 안내서 2단계)</p></div>`;
+    $('#nav').hidden = true;
+  } else if (Store.mode === 'error') {
+    body = `<div class="card"><h2>연결하지 못했어요</h2><p class="muted small">인터넷 연결을 확인하고 새로고침해 주세요. 계속 안 되면 선생님께 알려 주세요.</p><p class="tiny muted">오류 코드: ${esc(Store.err)}</p></div>`;
+    $('#nav').hidden = true;
+  } else if (Store.mode === 'loading') {
+    body = `<div class="card"><p class="muted">공부 기록을 불러오는 중입니다…</p></div>`;
+  } else if (!me()) { body = viewJoin(); $('#nav').hidden = true; }
+  else {
+    $('#nav').hidden = false;
+    body = { home: viewHome, match: viewMatch, rank: viewRank, me: viewMe }[state.tab]();
+    document.querySelectorAll('.nav button').forEach((b) => b.setAttribute('aria-current', b.dataset.tab === state.tab ? 'page' : 'false'));
+  }
+  app.innerHTML = head + body;
+  if (keep) { const el = document.getElementById(keep.id); if (el) { el.focus(); try { el.setSelectionRange(keep.s, keep.e); } catch (e) {} } }
+  tick();
+}
+
+function logo(size) {
+  return `<svg width="${size}" height="${size * 1.2}" viewBox="0 0 100 120" aria-hidden="true">
+    <path d="M50 4 C59 18 68 28 63 44 L37 44 C32 28 41 18 50 4 Z" fill="#FF6B2C"/>
+    <path d="M50 18 C54 26 57 32 55 42 L45 42 C43 32 46 26 50 18 Z" fill="#FFC93C"/>
+    <g transform="rotate(15 38 78)"><path d="M24 50 L52 50 L38 78 L52 106 L24 106 L38 78 Z" fill="none" stroke="#FF6B2C" stroke-width="6" stroke-linejoin="round"/></g>
+    <g transform="rotate(-15 62 78)"><path d="M48 50 L76 50 L62 78 L76 106 L48 106 L62 78 Z" fill="none" stroke="#FF6B2C" stroke-width="6" stroke-linejoin="round"/></g></svg>`;
+}
+
+// (1) 가입 / 프로필 선택
+function viewJoin() {
+  const f = state.form;
+  // 이 기기(익명 로그인)로 만든 프로필만 이어서 쓸 수 있음
+  const others = [...Store.users.entries()].filter(([, u]) => u.owner === Store.authUid)
+    .sort((a, b) => (a[1].nick || '').localeCompare(b[1].nick || ''));
+  const canJoin = TEACHER || others.length === 0; // 학생은 기기 하나에 프로필 하나
+  return `
+  <p class="hook">스카 가서 폰만 하다 온 적<br>있는 사람 <em>손!</em></p>
+  <p class="muted">메이트와 공부 약속을 잡고, 끝까지 앉아 있으면 티어가 올라가요.</p>
+  ${canJoin ? `<p class="tiny muted">실명·연락처는 받지 않아요. 친구들이 알아볼 수 있는 닉네임이면 충분해요.</p>
+  <form class="card" data-form="join">
+    <h2>닉네임으로 시작하기</h2>
+    <label class="f">닉네임 (2~10자, 랭킹에 이 이름만 보여요)
+      <input type="text" id="f-nick" data-field="nick" maxlength="10" value="${esc(f.nick)}" placeholder="예: 새벽순공러" autocomplete="off" required></label>
+    <div class="row">
+      <label class="f grow">학년<select id="f-grade" data-field="grade">${['1', '2', '3'].map((g) => `<option value="${g}" ${f.grade === g ? 'selected' : ''}>${g}학년</option>`).join('')}</select></label>
+      <label class="f grow">반<input type="number" id="f-cls" data-field="cls" min="1" max="20" value="${esc(f.cls)}" placeholder="예: 4"></label>
+    </div>
+    <label class="check"><input type="checkbox" id="f-ver" data-field="verified" ${f.verified ? 'checked' : ''}>
+      <span>같은 학교 학생임을 확인했어요 (학생증·학교 계정 인증 자리, 시연에선 체크로 대신)</span></label>
+    <button class="btn primary block" type="submit">가입하고 시작</button>
+  </form>` : ''}
+  ${others.length ? `<div class="card"><h3>이 기기에서 이어서 하기</h3><div class="row wrap">
+    ${others.map(([id, u]) => `<button class="chip" type="button" data-act="pick" data-id="${id}">${esc(u.nick)}</button>`).join('')}</div></div>` : ''}`;
+}
+
+// (2) 홈: 내 티어 + 진행 중인 약속
+function viewHome() {
+  const u = me(); const s = stats(u); const t = tierOf(u);
+  const idx = TIERS.indexOf(t); const next = idx > 0 ? TIERS[idx - 1] : null;
+  let prog = 100, req = '';
+  if (next) {
+    prog = Math.min(100, Math.round((s.h / next.h) * 100));
+    const items = [
+      [`순공 ${next.h}시간`, s.h >= next.h, `${s.h.toFixed(1)}시간`],
+      [`평균 별점 ${next.avg.toFixed(1)} 이상`, s.avg >= next.avg, s.n ? s.avg.toFixed(1) : '아직 없음'],
+      ...(next.pen < 99 ? [[`벌점 ${next.pen}점 이하`, s.pen <= next.pen, `${s.pen}점`]] : [])
+    ];
+    req = `<div class="req"><span>다음 티어 <b style="color:${next.color}">${next.key}</b> 조건</span>
+      ${items.map(([k, ok, v]) => `<span class="${ok ? 'ok' : ''}">${ok ? '✓' : '·'} ${k} <span class="tiny">(지금 ${v})</span></span>`).join('')}</div>`;
+  }
+  const a = myActive();
+  return `
+  <div class="card">
+    <div class="row between"><div><p class="small muted">${esc(u.nick)} 님의 티어</p><p class="bigtier" style="color:${t.color}">${t.key}</p></div>
+      <div style="text-align:right"><p class="small muted">${esc(u.grade)}학년 ${esc(u.cls || '-')}반</p></div></div>
+    <div class="stats">
+      <div class="stat"><b style="color:var(--accent)">${fmtP(u.points)}</b><span>갓생 포인트 · ${pointRanking().findIndex((r) => r.id === state.me) + 1}위</span></div>
+      <div class="stat"><b>${s.h.toFixed(1)}h</b><span>누적 순공</span></div>
+      <div class="stat"><b>${s.n ? s.avg.toFixed(1) : '-'}</b><span>메이트 별점</span></div>
+      <div class="stat"><b style="color:${s.pen ? 'var(--danger)' : 'inherit'}">${s.pen}점</b><span>벌점</span></div>
+    </div>
+    ${next ? `<div class="bar" role="img" aria-label="다음 티어까지 순공 ${prog}%"><i style="width:${prog}%"></i></div>` : '<p class="small" style="color:var(--accent)">최고 티어 달성! 갓생러의 품격을 지켜 주세요.</p>'}
+    ${req}
+  </div>
+  ${isBlocked(u) ? `<div class="notice">벌점 ${RULE.blockAt}점 이상이라 지금은 매칭이 제한돼요.</div>` : ''}
+  ${a ? viewSession(a) : `
+  <div class="card"><h2>오늘 같이 공부할 메이트를 찾아볼까요?</h2>
+    <p class="muted small">시간·장소를 정해 약속을 올리거나, 올라온 약속에 참여하세요.</p>
+    <button class="btn primary block" type="button" data-act="tab" data-tab="match">메이트 찾기</button></div>`}
+  ${TEACHER ? `<div class="card">
+    <div class="row between"><div class="grow"><h3>시연 배속</h3><p class="tiny muted">켜면 1초가 1분으로 흘러요. 새로 만드는 약속부터 적용</p></div>
+      <button class="chip" type="button" data-act="speed" aria-pressed="${state.speed > 1}">${state.speed > 1 ? '×60 켜짐' : '꺼짐'}</button></div>
+  </div>` : ''}`;
+}
+
+// 약속 카드(상태별로 다른 버튼)
+function viewSession(s) {
+  const mine = state.me, other = otherOf(s);
+  const chk = s.checkin || {}; const away = s.away || {};
+  const start = new Date(s.startAt).getTime(); const now = Date.now();
+  const head = `<div class="row between"><h2>${{ open: '메이트 모집 중', matched: '약속 확정!', running: '집중 중', done: '수고했어요!' }[s.status]}</h2>
+    <span class="tier" style="color:var(--muted)">${s.speed > 1 ? '시연 ×' + s.speed : '실시간'}</span></div>
+    <p class="small muted">${esc(s.place)}${s.detail ? ' · ' + esc(s.detail) : ''} · ${hhmm(s.startAt)} 시작 · ${s.durationMin / 60}시간${s.subject ? ' · ' + esc(s.subject) : ''}</p>`;
+  const person = (id, label) => {
+    if (!id) return `<div class="person"><span class="tiny muted">${label}</span><b>기다리는 중…</b></div>`;
+    let st = chk[id] ? `<span class="state ok">도착 ${hhmm(chk[id])}</span>` : `<span class="state wait">아직 도착 전</span>`;
+    if (s.status === 'running' || s.status === 'done') st = `<span class="state ${(away[id] || 0) >= RULE.awayLimit ? 'bad' : 'ok'}">앱 이탈 ${away[id] || 0}회</span>`;
+    return `<div class="person"><span class="tiny muted">${label}${id === mine ? ' (나)' : ''}</span><b>${esc(nick(id))}</b>${st}</div>`;
+  };
+  const people = `<div class="people">${person(s.hostId, '방장')}${person(s.mateId, '메이트')}</div>`;
+  let actions = '';
+  if (s.status === 'open') {
+    actions = `<p class="small muted">같은 조건의 친구가 참여하면 알려 드려요.</p>
+      <button class="btn danger block" type="button" data-act="cancel" data-id="${s.id}">약속 취소</button>`;
+  } else if (s.status === 'matched') {
+    const lateAt = start + ms(RULE.lateMin, s.speed), noShowAt = start + ms(RULE.noShowMin, s.speed);
+    const bothIn = chk[s.hostId] && chk[s.mateId];
+    actions = `${!chk[mine] ? `<button class="btn primary block" type="button" data-act="checkin" data-id="${s.id}">장소 도착 체크</button>
+        <p class="tiny muted">${now > lateAt ? '지금 체크하면 지각 벌점이 붙어요.' : `시작 후 ${RULE.lateMin}분 안에 체크해야 지각이 아니에요.`}</p>` : ''}
+      ${chk[mine] ? `<button class="btn primary block" type="button" data-act="start" data-id="${s.id}" ${bothIn ? '' : 'disabled'}>집중 시작 (폰은 엎어 두기)</button>
+        ${bothIn ? '' : '<p class="tiny muted">메이트가 도착 체크하면 시작할 수 있어요.</p>'}` : ''}
+      ${chk[mine] && !chk[other] && now > noShowAt ? `<button class="btn danger block" type="button" data-act="noshow" data-id="${s.id}">메이트 노쇼 신고 (벌점 ${RULE.penNoShow}점)</button>` : ''}
+      <button class="btn ghost small" type="button" data-act="cancel" data-id="${s.id}">약속 취소</button>`;
+  } else if (s.status === 'running') {
+    actions = `<p class="timer" id="timer">00:00:00</p>
+      <div class="bar"><i id="timerbar" style="width:0%"></i></div>
+      <p class="tiny muted" style="text-align:center">목표 ${clock(s.durationMin * 60)} · 앱을 ${RULE.awaySec}초 넘게 벗어나면 이탈 1회, ${RULE.awayLimit}회면 벌점</p>
+      <button class="btn block" type="button" data-act="finish" data-id="${s.id}">집중 끝내기</button>`;
+  } else if (s.status === 'done') {
+    actions = `<p class="small">이번 순공 <b>${(s.focusMin / 60).toFixed(1)}시간</b>이 두 사람 모두에게 적립됐어요.${s.endReason === 'early' ? ' (조기 종료)' : ''}</p>
+      <h3>${esc(nick(other))} 님은 어땠나요?</h3>
+      <p class="tiny muted">시간 약속, 집중도를 생각해서 별점을 주세요. 상대 티어에 반영돼요.</p>
+      <div class="stars" role="group" aria-label="별점">${[1, 2, 3, 4, 5].map((n) => `<button class="star" type="button" data-act="star" data-n="${n}" aria-pressed="${state.stars >= n}" aria-label="별 ${n}개">
+        <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 L14.8 8.7 L21.2 9.4 L16.4 13.7 L17.8 20.1 L12 16.8 L6.2 20.1 L7.6 13.7 L2.8 9.4 L9.2 8.7 Z" fill="currentColor"/></svg></button>`).join('')}</div>
+      <button class="btn primary block" type="button" data-act="rate" data-id="${s.id}" ${state.stars ? '' : 'disabled'}>평가 보내기</button>`;
+  }
+  return `<div class="card">${head}${people}${actions}</div>`;
+}
+
+// (3) 메이트 찾기
+function viewMatch() {
+  const u = me(); const f = state.form; const a = myActive(); const blocked = isBlocked(u);
+  const open = [...Store.sessions.entries()].map(([id, s]) => ({ id, ...s }))
+    .filter((s) => s.status === 'open' && s.hostId !== state.me && (!state.durFilter || s.durationMin === state.durFilter))
+    .sort((x, y) => x.startAt.localeCompare(y.startAt));
+  const lock = blocked ? `<div class="notice">벌점 ${RULE.blockAt}점 이상이라 매칭이 제한됐어요.</div>`
+    : a ? `<div class="notice info">이미 잡힌 약속이 있어요. 홈에서 먼저 마무리해 주세요.</div>` : '';
+  return `
+  ${lock}
+  <div class="row wrap" role="group" aria-label="공부 시간으로 거르기">
+    ${[[0, '전체'], [120, '2시간'], [180, '3시간'], [240, '4시간']].map(([v, l]) => `<button class="chip" type="button" data-act="dur" data-v="${v}" aria-pressed="${state.durFilter === v}">${l}</button>`).join('')}
+  </div>
+  <div class="list">
+    ${open.length ? open.map((s) => {
+      const host = Store.users.get(s.hostId) || {};
+      return `<div class="item">
+        <div class="row between"><b>${esc(host.nick || '?')}</b>${tierBadge(host)}</div>
+        <p class="small muted">${esc(s.place)}${s.detail ? ' · ' + esc(s.detail) : ''}<br>${hhmm(s.startAt)} 시작 · ${s.durationMin / 60}시간${s.subject ? ' · ' + esc(s.subject) : ''}</p>
+        <button class="btn primary small" type="button" data-act="join" data-id="${s.id}" ${blocked || a ? 'disabled' : ''}>같이 공부하기</button></div>`;
+    }).join('') : `<div class="empty"><b>지금 올라온 약속이 없어요</b><span class="small">아래에서 첫 약속을 올려 보세요.</span></div>`}
+  </div>
+  <form class="card" data-form="create">
+    <h2>새 공부 약속 올리기</h2>
+    <label class="f">장소<select id="c-place" data-field="place">${PLACES.map((p) => `<option ${f.place === p ? 'selected' : ''}>${p}</option>`).join('')}</select></label>
+    <label class="f">장소 상세 (선택)<input type="text" id="c-detail" data-field="detail" maxlength="30" value="${esc(f.detail)}" placeholder="예: 3층 열람실 창가"></label>
+    <div class="row">
+      <label class="f grow">시작<select id="c-when" data-field="when">${[[0, '지금 바로'], [30, '30분 후'], [60, '1시간 후'], [120, '2시간 후']].map(([v, l]) => `<option value="${v}" ${+f.when === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+      <label class="f grow">공부 시간<select id="c-dur" data-field="dur">${[120, 180, 240].map((v) => `<option value="${v}" ${+f.dur === v ? 'selected' : ''}>${v / 60}시간</option>`).join('')}</select></label>
+    </div>
+    <label class="f">과목·목표 (선택)<input type="text" id="c-subj" data-field="subject" maxlength="20" value="${esc(f.subject)}" placeholder="예: 수학 기출 2회독"></label>
+    <button class="btn primary block" type="submit" ${blocked || a ? 'disabled' : ''}>약속 올리기</button>
+  </form>`;
+}
+
+// (4) 교내 랭킹: 포인트 랭킹(기본) / 티어 랭킹
+function viewRank() {
+  const seg = `<div class="seg" role="group" aria-label="랭킹 기준">
+    <button type="button" data-act="rankmode" data-v="point" aria-pressed="${state.rankMode === 'point'}">포인트 랭킹</button>
+    <button type="button" data-act="rankmode" data-v="tier" aria-pressed="${state.rankMode === 'tier'}">티어 랭킹</button></div>`;
+  if (state.rankMode === 'point') return seg + viewPointRank();
+  const rows = [...Store.users.entries()].map(([id, u]) => ({ id, u, s: stats(u), t: TIERS.indexOf(tierOf(u)) }))
+    .sort((a, b) => a.t - b.t || b.s.h - a.s.h || b.s.avg - a.s.avg);
+  const myIdx = rows.findIndex((r) => r.id === state.me);
+  return `${seg}
+  <div class="row between"><h2>교내 티어 랭킹</h2><span class="small muted">티어 → 순공 시간 순</span></div>
+  ${myIdx >= 0 ? `<p class="small muted">내 순위 <b style="color:var(--fg)">${myIdx + 1}위</b> / ${rows.length}명</p>` : ''}
+  <div class="list">
+    ${rows.map((r, i) => `<div class="rank ${r.id === state.me ? 'me' : ''}">
+      <span class="no ${i < 3 ? 'top' : ''}">${i + 1}</span>
+      <div class="grow"><b>${esc(r.u.nick)}</b>${r.u.isSample ? ' <span class="tiny muted">(예시)</span>' : ''}
+        <p class="tiny muted">순공 ${r.s.h.toFixed(1)}h · 별점 ${r.s.n ? r.s.avg.toFixed(1) : '-'} · 벌점 ${r.s.pen}</p></div>
+      ${tierBadge(r.u)}</div>`).join('')}
+  </div>`;
+}
+
+// 포인트 랭킹: 1~3위는 시상대, 4위부터 목록
+function viewPointRank() {
+  const rows = pointRanking();
+  const myIdx = rows.findIndex((r) => r.id === state.me);
+  const sample = (u) => (u.isSample ? ' <span class="tiny muted">(예시)</span>' : '');
+  const pod = (r, place) => r ? `<div class="pod ${place === 1 ? 'p1' : ''} ${r.id === state.me ? 'me' : ''}">
+      <span class="medal" style="color:${['', 'var(--gold)', 'var(--iron)', '#E0A070'][place]}">${place}</span>
+      <b>${esc(r.u.nick)}</b><span class="pts">${fmtP(r.p)}</span>${tierBadge(r.u)}</div>` : '<div></div>';
+  return `
+  <div class="row between"><h2>교내 갓생 포인트 랭킹</h2><span class="small muted">누적 포인트 순</span></div>
+  ${myIdx >= 0 ? `<p class="small muted">내 순위 <b style="color:var(--fg)">${myIdx + 1}위</b> / ${rows.length}명 · ${fmtP(rows[myIdx].p)}${myIdx > 0 ? ` · 한 계단 위까지 <b style="color:var(--accent)">${fmtP(rows[myIdx - 1].p - rows[myIdx].p + 1)}</b>` : ''}</p>` : ''}
+  <div class="podium">${pod(rows[1], 2)}${pod(rows[0], 1)}${pod(rows[2], 3)}</div>
+  <div class="list">
+    ${rows.slice(3).map((r, i) => `<div class="rank ${r.id === state.me ? 'me' : ''}">
+      <span class="no">${i + 4}</span>
+      <div class="grow"><b>${esc(r.u.nick)}</b>${sample(r.u)} ${tierBadge(r.u)}
+        <p class="tiny muted">순공 ${r.s.h.toFixed(1)}h · 별점 ${r.s.n ? r.s.avg.toFixed(1) : '-'} · 벌점 ${r.s.pen}</p></div>
+      <span class="pts">${fmtP(r.p)}</span></div>`).join('')}
+  </div>
+  <p class="tiny muted">순공 1시간 +${P.perHour}P · 목표 완주 +${P.goal}P · 정시 도착 +${P.onTime}P · 받은 별 1개 +${P.star}P · 벌점 1점 −${P.penalty}P</p>`;
+}
+
+// (5) 내 정보: 포인트·벌점 기록, 규칙, 프로필 전환, 시연 도구
+function viewMe() {
+  const u = me(); const log = u.penaltyLog || [];
+  const hasSample = [...Store.users.values()].some((x) => x.isSample);
+  return `
+  <div class="card"><div class="row between"><div><h2>${esc(u.nick)}</h2><p class="small muted">${esc(u.grade)}학년 ${esc(u.cls || '-')}반 · 완료한 약속 ${u.sessionsDone || 0}회</p></div>${tierBadge(u)}</div></div>
+  <div class="card"><div class="row between"><h3>포인트 기록</h3><b style="color:var(--accent)">${fmtP(u.points)}</b></div>
+    ${(u.pointLog || []).length ? `<div class="list">${u.pointLog.map((l) => `<div class="row between small"><span>${esc(l.reason)} <span class="tiny muted">${hhmm(l.at)}</span></span><b class="${l.pts >= 0 ? 'plus' : 'minus'}">${l.pts >= 0 ? '+' : ''}${l.pts}P</b></div>`).join('')}</div>`
+      : '<p class="small muted">약속을 지키고 순공을 채우면 포인트가 쌓여요.</p>'}
+  </div>
+  <div class="card"><h3>벌점 기록</h3>
+    ${log.length ? `<div class="list">${log.map((l) => `<div class="row between small"><span>${esc(l.reason)} <span class="tiny muted">${new Date(l.at).toLocaleDateString('ko-KR')} ${hhmm(l.at)}</span></span><b style="color:var(--danger)">+${l.pts}</b></div>`).join('')}</div>`
+      : '<p class="small muted">아직 벌점이 없어요. 이대로 갓생!</p>'}
+  </div>
+  <div class="card"><h3>갓생 포인트 규칙</h3>
+    <table class="rules"><tbody>
+      <tr><td>순공 1시간</td><td>+${P.perHour}P</td></tr>
+      <tr><td>약속한 시간 끝까지 완주</td><td>+${P.goal}P</td></tr>
+      <tr><td>시간 맞춰 도착 체크</td><td>+${P.onTime}P</td></tr>
+      <tr><td>메이트에게 받은 별 1개</td><td>+${P.star}P</td></tr>
+      <tr><td>벌점 1점</td><td>−${P.penalty}P</td></tr>
+    </tbody></table>
+  </div>
+  <div class="card"><h3>약속 지킴 규칙</h3>
+    <table class="rules"><tbody>
+      <tr><td>시작 ${RULE.lateMin}분 지나서 도착 체크 (지각)</td><td>+${RULE.penLate}점</td></tr>
+      <tr><td>시작 ${RULE.noShowMin}분 지나도 안 옴 (노쇼 신고)</td><td>+${RULE.penNoShow}점</td></tr>
+      <tr><td>집중 중 앱 이탈 ${RULE.awayLimit}회 이상</td><td>+${RULE.penAway}점</td></tr>
+      <tr><td>벌점 누적 ${RULE.blockAt}점 이상</td><td>매칭 제한</td></tr>
+    </tbody></table>
+    <p class="tiny muted">티어: 골드 8시간·별점 3.5 / 다이아 20시간·별점 4.0·벌점 2 이하 / 갓생러 40시간·별점 4.5·벌점 1 이하</p>
+  </div>
+  ${TEACHER ? `<div class="card"><h3>부스 시연 도구 (선생님 모드)</h3>
+    <p class="tiny muted">한 기기로 시연할 땐 프로필을 바꿔 가며 방장·메이트 역할을 해 보세요.</p>
+    <div class="row wrap">
+      <button class="btn small" type="button" data-act="logout">다른 프로필로 전환</button>
+      ${u.penalty ? `<button class="btn small" type="button" data-act="clearpen">이 프로필 벌점 초기화</button>` : ''}
+      ${hasSample ? `<button class="btn small danger" type="button" data-act="unseed">예시 학생 지우기</button>`
+        : `<button class="btn small" type="button" data-act="seed">예시 학생 4명 넣기</button>`}
+    </div>
+  </div>` : ''}`;
+}
+
+// ---------- 8. 집중 타이머 & 앱 이탈 감지 ----------
+function tick() {
+  const s = myActive(); if (!s || s.status !== 'running') return;
+  const sec = ((Date.now() - new Date(s.startedAt).getTime()) / 1000) * (s.speed || 1);
+  const goal = s.durationMin * 60;
+  const t = $('#timer'), b = $('#timerbar');
+  if (t) t.textContent = clock(Math.min(sec, goal));
+  if (b) b.style.width = Math.min(100, (sec / goal) * 100) + '%';
+  if (sec >= goal && s.hostId === state.me) finishSession(s, 'goal'); // 목표 달성 → 방장 기기가 자동 종료
+}
+setInterval(() => {
+  const s = myActive();
+  if (s && s.status === 'running') tick();
+  else if (s && s.status === 'matched' && state.tab === 'home') { /* 노쇼 버튼이 나타날 시점을 위해 가끔 다시 그림 */ if (Date.now() % 5000 < 1000) render(); }
+}, 1000);
+document.addEventListener('visibilitychange', () => {
+  const s = myActive(); if (!s || s.status !== 'running') return;
+  if (document.hidden) { state.awayStart = Date.now(); return; }
+  if (!state.awayStart) return;
+  const gone = Date.now() - state.awayStart; state.awayStart = 0;
+  const limit = Math.max(3000, (RULE.awaySec * 1000) / (s.speed || 1)); // 시연 배속이면 기준도 짧아짐(최소 3초)
+  if (gone >= limit) {
+    const n = ((s.away || {})[state.me] || 0) + 1;
+    safe(() => Store.update('sessions', s.id, { away: { [state.me]: n } }));
+    toast(`앱을 벗어났어요 (${n}/${RULE.awayLimit}회)`);
+  }
+});
+async function finishSession(s, reason) {
+  if (state.finishing || s.credited) return; state.finishing = true;
+  const sec = ((Date.now() - new Date(s.startedAt).getTime()) / 1000) * (s.speed || 1);
+  const focusMin = Math.min(s.durationMin, Math.floor(sec / 60));
+  await safe(async () => {
+    await Store.update('sessions', s.id, { status: 'done', endedAt: new Date().toISOString(), credited: true, focusMin, endReason: focusMin >= s.durationMin ? 'goal' : 'early' });
+    for (const id of [s.hostId, s.mateId]) {
+      const pts = [];
+      const studyP = Math.round((focusMin / 60) * P.perHour);
+      if (studyP) pts.push([studyP, `순공 ${(focusMin / 60).toFixed(1)}시간`]);
+      if (focusMin >= s.durationMin) pts.push([P.goal, '목표 시간 완주']);
+      const awayN = (s.away || {})[id] || 0;
+      await applyUser(id, { minutes: focusMin, points: pts, penalty: awayN >= RULE.awayLimit ? [RULE.penAway, `집중 중 앱 이탈 ${awayN}회`] : null });
+    }
+  }, reason === 'goal' ? '목표 시간 달성! 메이트를 평가해 주세요.' : '집중을 마쳤어요.');
+  state.finishing = false; state.stars = 0;
+}
+
+// ---------- 9. 버튼·입력 처리 ----------
+document.addEventListener('input', (e) => {
+  const k = e.target.dataset && e.target.dataset.field; if (!k) return;
+  state.form[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+});
+document.addEventListener('change', (e) => {
+  const k = e.target.dataset && e.target.dataset.field; if (!k) return;
+  state.form[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+});
+document.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const kind = e.target.dataset.form; const f = state.form;
+  if (kind === 'join') {
+    const name = f.nick.trim();
+    if (name.length < 2) return toast('닉네임은 2자 이상으로 써 주세요.');
+    if ([...Store.users.values()].some((u) => u.nick === name)) return toast('이미 있는 닉네임이에요.');
+    if (!f.verified) return toast('학교 인증을 체크해 주세요.');
+    const id = 'u' + uid();
+    if (!TEACHER && [...Store.users.values()].some((u) => u.owner === Store.authUid)) return toast('이 기기에는 이미 프로필이 있어요.');
+    await safe(() => Store.set('users', id, { owner: Store.authUid, nick: name, grade: f.grade, cls: String(f.cls || ''), studyMinutes: 0, ratingSum: 0, ratingCount: 0, penalty: 0, penaltyLog: [], points: 0, pointLog: [], sessionsDone: 0, createdAt: new Date().toISOString() }), '환영해요! 첫 약속을 잡아 볼까요?');
+    state.me = id; ls.set('sg.me', id); f.nick = ''; f.cls = ''; f.verified = false; state.tab = 'home'; render();
+  }
+  if (kind === 'create') {
+    const startAt = new Date(Date.now() + ms(+f.when, 1)).toISOString();
+    const id = 's' + uid();
+    await safe(() => Store.set('sessions', id, { hostId: state.me, mateId: null, place: f.place, detail: f.detail.trim(), subject: f.subject.trim(),
+      durationMin: +f.dur, startAt, createdAt: new Date().toISOString(), status: 'open', speed: state.speed, checkin: {}, away: {}, rated: {} }), '약속을 올렸어요. 메이트를 기다려요!');
+    f.detail = ''; f.subject = ''; state.tab = 'home'; render();
+  }
+});
+document.addEventListener('click', async (e) => {
+  const tabBtn = e.target.closest('.nav button');
+  if (tabBtn) { state.tab = tabBtn.dataset.tab; render(); window.scrollTo(0, 0); return; }
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const act = b.dataset.act; const s = b.dataset.id ? { id: b.dataset.id, ...Store.sessions.get(b.dataset.id) } : null;
+  switch (act) {
+    case 'tab': state.tab = b.dataset.tab; render(); break;
+    case 'pick': state.me = b.dataset.id; ls.set('sg.me', state.me); state.tab = 'home'; render(); break;
+    case 'logout': state.me = null; ls.set('sg.me', null); render(); break;
+    case 'speed': state.speed = state.speed > 1 ? 1 : 60; ls.set('sg.speed', state.speed); render(); break;
+    case 'dur': state.durFilter = +b.dataset.v; render(); break;
+    case 'rankmode': state.rankMode = b.dataset.v; render(); break;
+    case 'join':
+      if (s.status !== 'open') return toast('이미 다른 메이트가 잡은 약속이에요.');
+      await safe(() => Store.update('sessions', s.id, { mateId: state.me, status: 'matched', matchedAt: new Date().toISOString() }), '매칭 완료! 시간 맞춰 장소에서 만나요.');
+      state.tab = 'home'; render(); break;
+    case 'cancel': await safe(() => Store.update('sessions', s.id, { status: 'cancelled', cancelledBy: state.me }), '약속을 취소했어요.'); break;
+    case 'checkin': {
+      const late = Date.now() > new Date(s.startAt).getTime() + ms(RULE.lateMin, s.speed);
+      await safe(async () => {
+        await Store.update('sessions', s.id, { checkin: { [state.me]: new Date().toISOString() } });
+        await applyUser(state.me, late ? { penalty: [RULE.penLate, '지각 도착'] } : { points: [[P.onTime, '정시 도착']] });
+      }, late ? `지각이에요. 벌점 ${RULE.penLate}점 (−${RULE.penLate * P.penalty}P)` : `정시 도착! +${P.onTime}P`);
+      break;
+    }
+    case 'start': await safe(() => Store.update('sessions', s.id, { status: 'running', startedAt: new Date().toISOString() }), '집중 시작! 폰은 엎어 두세요.'); break;
+    case 'noshow': {
+      const other = otherOf(s);
+      await safe(async () => {
+        await Store.update('sessions', s.id, { status: 'cancelled', noShow: other });
+        await applyUser(other, { penalty: [RULE.penNoShow, '노쇼 (신고 확정)'] });
+      }, '노쇼를 신고했어요.');
+      break;
+    }
+    case 'finish': await finishSession(s, 'manual'); break;
+    case 'star': state.stars = +b.dataset.n; render(); break;
+    case 'rate': {
+      const other = otherOf(s); const n = state.stars;
+      await safe(async () => {
+        await Store.update('sessions', s.id, { rated: { [state.me]: n } });
+        await applyUser(other, { star: n });
+      }, `평가를 보냈어요. ${nick(other)} 님 +${n * P.star}P`);
+      state.stars = 0; break;
+    }
+    case 'clearpen': await safe(() => Store.update('users', state.me, { penalty: 0, penaltyLog: [] }), '벌점을 초기화했어요.'); break;
+    case 'seed': {
+      // 랭킹이 어떻게 보이는지 시연하기 위한 예시 학생 (티어별 1명씩)
+      // [닉네임, 순공 분, 별점 합, 별점 횟수, 벌점, 포인트]
+      const ex = [['예시_새벽순공러', 2700, 47, 10, 0, 760], ['예시_폰압수자', 1500, 42, 10, 1, 410], ['예시_스카지박령', 600, 37, 10, 2, 150], ['예시_내일은갓생', 120, 6, 2, 3, 15]];
+      await safe(async () => { for (const [n, m, rs, rc, p, pt] of ex) await Store.set('users', 'x' + uid(), { owner: Store.authUid, nick: n, grade: '3', cls: '', studyMinutes: m, ratingSum: rs, ratingCount: rc, penalty: p, penaltyLog: [], points: pt, pointLog: [], sessionsDone: 0, isSample: true, createdAt: new Date().toISOString() }); }, '예시 학생을 넣었어요. 랭킹을 확인해 보세요.');
+      break;
+    }
+    case 'unseed':
+      await safe(async () => { for (const [id, u] of Store.users) if (u.isSample && u.owner === Store.authUid) await Store.remove('users', id); }, '예시 학생을 지웠어요.');
+      break;
+  }
+});
+
+let toastTimer;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 2600); }
+
+Store.init();
+</script>
+</body>
+</html>
