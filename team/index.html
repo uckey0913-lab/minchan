@@ -116,7 +116,7 @@ details p{padding:0 0 16px;font-size:15px;color:var(--ink2)}
 .sw div{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--dk-muted)}
 .sw i{width:36px;height:36px;border-radius:10px;border:1px solid var(--navy-line);display:block}
 .qr{background:#fff;border-radius:14px;padding:10px;width:160px;height:160px;margin:0 auto}
-.qr svg{width:100%;height:100%;display:block}
+.qr svg,.qr img,.qr canvas{width:100%!important;height:100%!important;display:block}
 .who{font-size:13px;color:var(--accent);font-weight:700}
 footer{background:var(--navy);color:var(--dk-muted);padding:40px 0 56px;font-size:13px;text-align:center}
 .theme{background:none;border:1px solid var(--navy-line);border-radius:9999px;padding:6px 14px;font-size:12px;color:var(--dk-muted);margin-top:14px}
@@ -144,7 +144,7 @@ footer{background:var(--navy);color:var(--dk-muted);padding:40px 0 56px;font-siz
     <svg class="logo" width="112" height="134" viewBox="0 0 100 120" role="img" aria-label="스터디 갓생 로고"><use href="#flame"/></svg>
     <h1 class="brand">Study-<span>갓생</span></h1>
     <p class="lead">혼자선 무너지는 순공 시간, <b style="color:var(--gold)">메이트와 약속하면</b> 끝까지 버팁니다.<br>약속된 오프라인 메이트를 매칭해 끝까지 앉아 있게 만드는 순공 챌린지 플랫폼</p>
-    <div class="row mt"><a class="btn" href="https://uckey0913-lab.github.io/study-godsaeng/" target="_blank" rel="noopener">앱 체험하기</a><a class="btn ghost" href="#manual">이용 설명서 보기</a></div>
+    <div class="row mt"><a class="btn" href="../" target="_blank" rel="noopener">앱 체험하기</a><a class="btn ghost" href="#manual">이용 설명서 보기</a></div>
     <div class="pills"><span class="pill">① 경제성</span><span class="pill">② 사업성</span><span class="pill">③ 사업 의지 및 구체성</span><span class="pill">작동하는 앱 배포 완료</span></div>
   </div>
 </section>
@@ -311,7 +311,7 @@ footer{background:var(--navy);color:var(--dk-muted);padding:40px 0 56px;font-siz
     <p class="eyebrow">모의펀딩 11.23(월) ~ 11.27(금)</p>
     <h2 class="h2">혼공은 무너져도, 약속은 지킨다</h2>
     <p class="lead">모의펀딩 한 표로 갓생을 응원을 부탁드립니다.</p>
-    <div class="row mt"><a class="btn" href="https://uckey0913-lab.github.io/study-godsaeng/" target="_blank" rel="noopener">앱 체험하기</a></div>
+    <div class="row mt"><a class="btn" href="../" target="_blank" rel="noopener">앱 체험하기</a></div>
   </div>
 </section>
 </main>
@@ -362,4 +362,9 @@ footer{background:var(--navy);color:var(--dk-muted);padding:40px 0 56px;font-siz
 })();
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* 저장소 이름이 바뀌어도 앱 주소를 자동으로 따라가는 QR */
+(function(){try{var u=new URL('../',location.href).href;if(!/^https?:/.test(u)||!window.QRCode)return;var box=document.getElementById('qrbox');box.innerHTML='';new QRCode(box,{text:u,width:140,height:140,correctLevel:QRCode.CorrectLevel.M});}catch(e){}})();
+</script>
 </body></html>
